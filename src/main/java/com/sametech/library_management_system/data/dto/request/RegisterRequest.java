@@ -1,5 +1,6 @@
 package com.sametech.library_management_system.data.dto.request;
 
+import com.sametech.library_management_system.data.models.users.Role;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -31,4 +32,5 @@ public class RegisterRequest {
     @NotEmpty
     @NotNull
     private String password;
+    private Role role;
 }
