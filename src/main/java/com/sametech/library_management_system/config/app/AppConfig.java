@@ -18,7 +18,7 @@ public class AppConfig {
 
     @Bean
     public MailConfig mailConfig(){
-        return new MailConfig(mailUrl, mailApiKey);
+        return new MailConfig(mailApiKey, mailUrl);
     }
 
     @Bean

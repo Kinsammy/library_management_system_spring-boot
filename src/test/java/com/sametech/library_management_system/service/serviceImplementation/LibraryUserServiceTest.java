@@ -30,8 +30,8 @@ class LibraryUserServiceTest {
 
     @Test
     void registerTest() {
-        var response = libraryUserService.register(request);
-        assertThat(response).isNotNull();
+        var requestResponse = libraryUserService.register(request);
+        assertThat(requestResponse).isNotNull();
     }
 
     @Test
