@@ -16,16 +16,15 @@ import java.util.List;
 @Entity
 public class LibraryUser {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String phoneNumber;
     @OneToOne(targetEntity = LibraryUser.class, fetch = FetchType.EAGER)
-//    @JoinColumn(name = "library_user_id")
     private Address address;
     private Gender gender;
     private int age;
     @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private AppUser userDetails;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Token> tokens;
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "libraryUser")
+//    private List<Token> tokens;
 }

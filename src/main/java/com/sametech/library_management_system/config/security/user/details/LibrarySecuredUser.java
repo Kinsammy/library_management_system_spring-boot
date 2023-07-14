@@ -14,14 +14,11 @@ public class LibrarySecuredUser implements UserDetails {
     private final AppUser appUser;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return appUser.getRole().getAuthorities()
-                .stream().map(role-> new SimpleGrantedAuthority(role.getAuthority()))
-                .collect(Collectors.toList());
+        return appUser.getRole().getAuthorities();
     }
 
-  //  public Collection<? extends GrantedAuthority> getAuthorities() {
-//        return role.getAuthorities();
-//    }
+
+
 
     @Override
     public String getPassword() {

@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Admin {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private AppUser userDetails;

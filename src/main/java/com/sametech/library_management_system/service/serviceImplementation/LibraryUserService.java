@@ -52,19 +52,19 @@ public class LibraryUserService implements ILibraryUserService {
                 .userDetails(libraryUserDetails)
                 .build();
         LibraryUser savedLibraryUser = getsavedLibraryUser(libraryUser);
-        TokenResponse token = tokenService.generateAndSaveToken(savedLibraryUser);
-        sendVerificationEmail(savedLibraryUser, token.toString());
+//        TokenResponse token = tokenService.generateAndSaveToken(savedLibraryUser);
+        sendVerificationEmail(savedLibraryUser);
         return getRegisterResponse(savedLibraryUser);
     }
 
-    private void sendVerificationEmail(LibraryUser libraryUser, String token) {
+    private void sendVerificationEmail(LibraryUser libraryUser) {
         EmailNotificationRequest request = new EmailNotificationRequest();
         request.getTo().add(new Recipient(
                 libraryUser.getUserDetails().getFirstName(),
                 libraryUser.getUserDetails().getEmail())
         );
         request.setSubject("Welcome to SamTech: Activate Your Account");
-        request.setHtmlContent("To activate your Account enter the following digits on your web browser\n\n" + token);
+        request.setHtmlContent("To activate your Account enter the following digits on your web browser\n\n");
         mailService.sendMail(request);
     }
 

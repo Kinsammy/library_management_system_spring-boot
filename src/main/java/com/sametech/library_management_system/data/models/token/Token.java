@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Entity
 public class Token {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String token;
     @Enumerated(EnumType.STRING)
@@ -26,7 +26,7 @@ public class Token {
     private final LocalDateTime createAt = LocalDateTime.now();
     private final LocalDateTime expiryTime = createAt.plusMinutes(5);
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    @JoinColumn(name = "user_details_id")
+    @JoinColumn(name = "library_user_id")
     private LibraryUser  libraryUser;
 
     public Token(LibraryUser libraryUser, String token){

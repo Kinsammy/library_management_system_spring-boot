@@ -19,7 +19,7 @@ import java.util.List;
 @Entity
 public class BookInstance {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String imprint;
     @Enumerated(EnumType.STRING)
