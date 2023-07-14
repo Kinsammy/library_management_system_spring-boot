@@ -1,6 +1,7 @@
 package com.sametech.library_management_system.config.app;
 
 import com.sametech.library_management_system.config.mail.MailConfig;
+import com.sametech.library_management_system.config.security.util.JwtUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +15,8 @@ public class AppConfig {
     private String mailUrl;
     @Value("${sendinblue.api.key}")
     private String mailApiKey;
+    @Value("${jwt.secret.key}")
+    private String jwtSecretKey;
 
 
     @Bean
@@ -27,7 +30,7 @@ public class AppConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
+    public JwtUtil jwtUtil(){
+        return new JwtUtil(jwtSecretKey);
     }
 }

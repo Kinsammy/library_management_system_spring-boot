@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.web.multipart.MultipartFile;
 
-public interface IAppUserUserService {
+public interface IAppUserService {
     VerifyResponse verifyAccountWithToken(VerifyRequest request);
     ApiResponse sendVerifyLink(@NotNull AppUser user);
     ApiResponse sendVerifyOtp(@NotNull AppUser user);

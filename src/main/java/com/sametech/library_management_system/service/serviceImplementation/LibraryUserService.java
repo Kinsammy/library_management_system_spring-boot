@@ -5,6 +5,7 @@ import com.sametech.library_management_system.data.dto.request.EmailNotification
 import com.sametech.library_management_system.data.dto.request.Recipient;
 import com.sametech.library_management_system.data.dto.request.RegisterRequest;
 import com.sametech.library_management_system.data.dto.response.RegisterResponse;
+import com.sametech.library_management_system.data.dto.response.TokenResponse;
 import com.sametech.library_management_system.data.models.users.AppUser;
 import com.sametech.library_management_system.data.models.users.Librarian;
 import com.sametech.library_management_system.data.models.users.LibraryUser;
@@ -13,6 +14,7 @@ import com.sametech.library_management_system.data.repository.LibraryUserReposit
 import com.sametech.library_management_system.exception.UserAlreadyExistException;
 import com.sametech.library_management_system.notification.mail.IMailService;
 import com.sametech.library_management_system.service.serviceInterface.ILibraryUserService;
+import com.sametech.library_management_system.service.serviceInterface.ITokenService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -31,6 +33,7 @@ public class LibraryUserService implements ILibraryUserService {
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
     private final IMailService mailService;
+    private final ITokenService tokenService;
     
     @Override
     public RegisterResponse register(RegisterRequest request) {
@@ -49,18 +52,19 @@ public class LibraryUserService implements ILibraryUserService {
                 .userDetails(libraryUserDetails)
                 .build();
         LibraryUser savedLibraryUser = getsavedLibraryUser(libraryUser);
-        sendVerificationEmail(savedLibraryUser);
+        TokenResponse token = tokenService.generateAndSaveToken(savedLibraryUser);
+        sendVerificationEmail(savedLibraryUser, token.toString());
         return getRegisterResponse(savedLibraryUser);
     }
 
-    private void sendVerificationEmail(LibraryUser libraryUser) {
+    private void sendVerificationEmail(LibraryUser libraryUser, String token) {
         EmailNotificationRequest request = new EmailNotificationRequest();
         request.getTo().add(new Recipient(
                 libraryUser.getUserDetails().getFirstName(),
                 libraryUser.getUserDetails().getEmail())
         );
         request.setSubject("Welcome to SamTech: Activate Your Account");
-        request.setHtmlContent("To activate your Account enter the following digits on your web browser");
+        request.setHtmlContent("To activate your Account enter the following digits on your web browser\n\n" + token);
         mailService.sendMail(request);
     }
 

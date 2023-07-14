@@ -1,6 +1,7 @@
 package com.sametech.library_management_system.service.serviceImplementation;
 
 import com.sametech.library_management_system.data.dto.request.RegisterRequest;
+import com.sametech.library_management_system.data.models.users.Role;
 import com.sametech.library_management_system.service.serviceInterface.ILibraryUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +27,7 @@ class LibraryUserServiceTest {
         request.setLastName("Fanu");
         request.setEmail("fanusamuel@gmail.com");
         request.setPassword("testpassword");
+        request.setRole(Role.LIBRARY_USER);
     }
 
     @Test
