@@ -1,5 +1,6 @@
 package com.sametech.library_management_system.data.models.token;
 
+import com.sametech.library_management_system.data.models.users.AppUser;
 import com.sametech.library_management_system.data.models.users.LibraryUser;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,14 +25,14 @@ public class Token {
     private boolean expired;
     private boolean revoked;
     private final LocalDateTime createAt = LocalDateTime.now();
-    private final LocalDateTime expiryTime = createAt.plusMinutes(5);
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "library_user_id")
-    private LibraryUser  libraryUser;
+    private final LocalDateTime expiryTime = createAt.plusMinutes(10);
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @JoinColumn(name = "app_user_id")
+    private AppUser appUser;
 
-    public Token(LibraryUser libraryUser, String token){
+    public Token(AppUser appUser, String token){
         super();
-        this.libraryUser = libraryUser;
+        this.appUser = appUser;
         this.token = token;
     }
 }

@@ -1,15 +1,14 @@
 package com.sametech.library_management_system.config.security.security.config;
 
-import com.sametech.library_management_system.config.security.filter.LibraryMSAuthenticationFilter;
-import com.sametech.library_management_system.config.security.manager.LibraryAuthenticationManager;
-import com.sametech.library_management_system.config.security.providers.LibraryAuthenticationProvider;
-import com.sametech.library_management_system.config.security.util.JwtUtil;
+import com.sametech.library_management_system.config.security.filter.LibraryAuthenticationFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -22,19 +21,29 @@ import java.util.List;
 
 @Configuration
 @AllArgsConstructor
+@EnableWebSecurity
+@EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
-    private final AuthenticationManager authenticationManager;
     private final AuthenticationProvider authenticationProvider;
-    private final JwtUtil jwtUtil;
+    private final LibraryAuthenticationFilter authenticationFilter;
     private static final String[] AUTHENTICATION_WHITELIST = {
             "/api/v1/auth/**",
+            "/v2/api-docs",
+            "/v3/api-docs",
+            "/v3/api-docs/**",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui/**",
+            "webjars/**",
+            "/swagger-ui.html"
     };
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        UsernamePasswordAuthenticationFilter authenticationFilter = new LibraryMSAuthenticationFilter(authenticationManager, jwtUtil);
-        authenticationFilter.setFilterProcessesUrl("/api/v1/login");
-         return http.csrf(AbstractHttpConfigurer::disable)
+        http
+                .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(sessionManagement->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -44,8 +53,10 @@ public class SecurityConfig {
                         .requestMatchers(AUTHENTICATION_WHITELIST)
                         .permitAll()
                         .anyRequest()
-                        .authenticated())
-                 .build();
+                        .authenticated());
+        return http.build();
+
+
 
 
 

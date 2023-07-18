@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VerifyResponse {
-    private Long id;
     private String message;
     private boolean isSuccess;
 }

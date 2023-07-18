@@ -23,8 +23,8 @@ public class LibraryUser {
     private Address address;
     private Gender gender;
     private int age;
-    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
+    @JoinColumn(name = "app_user_id")
     private AppUser userDetails;
-//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "libraryUser")
-//    private List<Token> tokens;
+
 }
