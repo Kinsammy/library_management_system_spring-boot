@@ -26,12 +26,11 @@ public class Token {
     private boolean revoked;
     private final LocalDateTime createAt = LocalDateTime.now();
     private final LocalDateTime expiryTime = createAt.plusMinutes(10);
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "app_user_id")
     private AppUser appUser;
 
     public Token(AppUser appUser, String token){
-        super();
         this.appUser = appUser;
         this.token = token;
     }

@@ -12,15 +12,19 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 public interface IAppUserService {
+
     VerifyResponse verifyAccountWithToken(VerifyRequest request);
-    AuthenticationResponse authenticate(AuthenticationRequest request);
+    AuthenticationResponse login(AuthenticationRequest request);
+    void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException;
     ApiResponse sendVerifyLink(@NotNull AppUser user);
 
     void sendResetPasswordMail(String email);
     ApiResponse resetPassword(PasswordRequest passwordRequest);
+    ApiResponse updateAppUser(AppUser appUser);
     ApiResponse changePassword(PasswordRequest passwordRequest);
     AppUser getUserByEmail(String email);
-    void refreshToken(HttpServletRequest request, HttpServletResponse response);
     ApiResponse uploadProfileImage(Long userId, MultipartFile profileImage);
 }

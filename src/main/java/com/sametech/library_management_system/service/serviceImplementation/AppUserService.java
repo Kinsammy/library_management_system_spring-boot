@@ -1,9 +1,8 @@
 package com.sametech.library_management_system.service.serviceImplementation;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sametech.library_management_system.config.security.service.JwtService;
-import com.sametech.library_management_system.data.dto.request.AuthenticationRequest;
-import com.sametech.library_management_system.data.dto.request.PasswordRequest;
-import com.sametech.library_management_system.data.dto.request.VerifyRequest;
+import com.sametech.library_management_system.data.dto.request.*;
 import com.sametech.library_management_system.data.dto.response.ApiResponse;
 import com.sametech.library_management_system.data.dto.response.AuthenticationResponse;
 import com.sametech.library_management_system.data.dto.response.VerifyResponse;
@@ -12,21 +11,27 @@ import com.sametech.library_management_system.data.models.token.TokenType;
 import com.sametech.library_management_system.data.models.users.AppUser;
 import com.sametech.library_management_system.data.repository.AppUserRepository;
 import com.sametech.library_management_system.data.repository.TokenRepository;
+import com.sametech.library_management_system.exception.LibraryAuthenticationException;
 import com.sametech.library_management_system.exception.LibraryLogicException;
 import com.sametech.library_management_system.exception.UserNotFoundException;
+import com.sametech.library_management_system.notification.mail.IMailService;
 import com.sametech.library_management_system.service.serviceInterface.IAppUserService;
 import com.sametech.library_management_system.service.serviceInterface.ITokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -37,6 +42,10 @@ public class AppUserService implements IAppUserService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final TokenRepository tokenRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final IMailService mailService;
+
+
 
 
     @Override
@@ -51,7 +60,7 @@ public class AppUserService implements IAppUserService {
     }
 
     @Override
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponse login(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -61,7 +70,7 @@ public class AppUserService implements IAppUserService {
         var appUser = appUserRepository.findByEmail(request.getEmail())
                 .orElseThrow(()-> new UserNotFoundException("User not found"));
         var jwtToken = jwtService.generateToken(appUser);
-        revokeUserToken(appUser);
+        revokeAllUserTokens(appUser);
         saveUserToken(appUser, jwtToken);
         var refreshToken = jwtService.generateRefreshToken(appUser);
         return getAuthenticationResponse(jwtToken, refreshToken);
@@ -85,7 +94,7 @@ public class AppUserService implements IAppUserService {
         tokenRepository.save(token);
     }
 
-    private void revokeUserToken(AppUser appUser) {
+    private void revokeAllUserTokens(AppUser appUser) {
         var validUserTokens = tokenRepository.findValidTokenByAppUserId(appUser.getId());
         if (validUserTokens.isEmpty()){
             return;
@@ -112,12 +121,48 @@ public class AppUserService implements IAppUserService {
 
     @Override
     public void sendResetPasswordMail(String email) {
+        var appUser = appUserRepository.findByEmail(email)
+                .orElseThrow(()-> new UserNotFoundException("User not found"));
 
+        String generateToken = jwtService.generateToken(appUser);
+        appUser.setResetToken(generateToken);
+        appUserRepository.save(appUser);
+        sendResetNotification(appUser, generateToken);
+
+    }
+
+    private void sendResetNotification(AppUser appUser, String token) {
+        EmailNotificationRequest request = new EmailNotificationRequest();
+        request.getTo().add(new Recipient(
+                appUser.getUsername(), appUser.getEmail()
+        ));
+        request.setSubject("Welcome to SamTech: Reset Your Password");
+        request.setHtmlContent("To reset your password enter the following digits on your web browser\n\n" + token);
+        mailService.sendMail(request);
     }
 
     @Override
     public ApiResponse resetPassword(PasswordRequest passwordRequest) {
-        return null;
+        Optional<Token> token = tokenRepository.findTokenByAppUserAndToken(getUserByEmail(passwordRequest.getEmail()), passwordRequest.getVerificationToken());
+        if (token.isEmpty()) throw new LibraryLogicException("No token found");
+        if (token.get().getExpiryTime().isBefore(LocalDateTime.now())){
+            tokenRepository.delete(token.get());
+            throw new LibraryAuthenticationException("reset token not found");
+        }
+        var appUser = getUserByEmail(token.get().getAppUser().getEmail());
+        appUser.setPassword(passwordEncoder.encode(passwordRequest.getNewPassword()));
+        var updatedAppUser= updateAppUser(appUser);
+
+
+        return updatedAppUser;
+    }
+
+    @Override
+    public ApiResponse updateAppUser(AppUser appUser) {
+        appUserRepository.save(appUser);
+        return ApiResponse.builder()
+                .message("Successfully updated")
+                .build();
     }
 
     @Override
@@ -132,8 +177,30 @@ public class AppUserService implements IAppUserService {
     }
 
     @Override
-    public void refreshToken(HttpServletRequest request, HttpServletResponse response) {
-
+    public void refreshToken(HttpServletRequest request,
+                             HttpServletResponse response) throws IOException {
+        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        final String refreshToken;
+        final String userEmail;
+        if (authHeader == null || !authHeader.startsWith("Bearer ")){
+            return;
+        }
+        refreshToken = authHeader.substring(7);
+        userEmail = jwtService.extractUsername(refreshToken);
+        if (userEmail != null){
+            var appUser = appUserRepository.findByEmail(userEmail).orElseThrow();
+            if (jwtService.isTokenValid(refreshToken, appUser)){
+                var accessToken = jwtService.generateToken(appUser);
+                revokeAllUserTokens(appUser);
+                saveUserToken(appUser, accessToken);
+                var authResponse = AuthenticationResponse.builder()
+                        .accessToken(accessToken)
+                        .refreshToken(refreshToken)
+                        .build();
+                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
+            }
+        }
     }
 
     @Override

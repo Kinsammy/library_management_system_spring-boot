@@ -18,11 +18,5 @@ public interface ILibraryUserService {
     RegisterResponse register(RegisterRequest request);
 
 
-    LibraryUser getLibraryUserById(Long libraryUserId);
 
-    Optional<LibraryUser> getLibraryBy(Long libraryUserId);
-    LibraryUser updateLibraryUser(Long libraryUserId, JsonPatch updatePayLoad);
-    Page<LibraryUser> getAllLibraryUsersPerPage(int pageNumber);
-    LibraryUser updateLibraryUser(LibraryUser libraryUser);
-    Librarian deleteLibraryUser(Long  libraryUserId);
 }

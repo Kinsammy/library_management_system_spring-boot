@@ -48,12 +48,14 @@ public class SecurityConfig {
                 .sessionManagement(sessionManagement->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
+
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authorize-> authorize
                         .requestMatchers(AUTHENTICATION_WHITELIST)
                         .permitAll()
                         .anyRequest()
                         .authenticated());
+
         return http.build();
 
 

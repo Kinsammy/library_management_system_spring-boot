@@ -69,26 +69,7 @@ public class LibraryUserService implements ILibraryUserService {
         return getRegisterResponse(savedLibraryUser);
     }
 
-//    @Override
-//    public VerifyResponse verifyAccountWithToken(VerifyRequest request) {
-//        LibraryUser libraryUser = new LibraryUser();
-//       LibraryUser foundLibraryUser = getLibraryUserById(libraryUser.getId());
-//       if (foundLibraryUser == null){
-//           throw new UserNotFoundException("Invalid email");
-//       }
-//       Optional<Token> receivedToken = tokenService.validateReceivedToken(foundLibraryUser, request.getVerificationToken());
-//       foundLibraryUser.getUserDetails().setEnabled(true);
-//       libraryUserRepository.save(foundLibraryUser);
-//       tokenService.deleteToken(receivedToken.get());
-//        return getVerifyResponse();
-//    }
 
-        private static VerifyResponse getVerifyResponse() {
-            return VerifyResponse.builder()
-                    .message("Account verification successful")
-                    .isSuccess(true)
-                    .build();
-        }
 
 
     private void sendVerificationEmail(AppUser appUser, String token) {
@@ -114,42 +95,11 @@ public class LibraryUserService implements ILibraryUserService {
         return appUserRepository.findByEmail(email).isPresent();
     }
 
-    @Override
-    public LibraryUser getLibraryUserById(Long libraryUserId) {
-        return libraryUserRepository.findById(libraryUserId).orElseThrow(
-                ()-> new LibraryLogicException(
-                        String.format("Library user with %d not found", libraryUserId)
-                )
-        );
-    }
+
 
 
     private  LibraryUser getsavedLibraryUser(LibraryUser libraryUser) {
         return libraryUserRepository.save(libraryUser);
     }
 
-    @Override
-    public Optional<LibraryUser> getLibraryBy(Long libraryUserId) {
-        return Optional.empty();
-    }
-
-    @Override
-    public LibraryUser updateLibraryUser(Long libraryUserId, JsonPatch updatePayLoad) {
-        return null;
-    }
-
-    @Override
-    public Page<LibraryUser> getAllLibraryUsersPerPage(int pageNumber) {
-        return null;
-    }
-
-    @Override
-    public LibraryUser updateLibraryUser(LibraryUser libraryUser) {
-        return null;
-    }
-
-    @Override
-    public Librarian deleteLibraryUser(Long libraryUserId) {
-        return null;
-    }
 }

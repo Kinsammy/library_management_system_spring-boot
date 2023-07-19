@@ -23,7 +23,6 @@ public class AppUser implements UserDetails{
     private Long id;
     private String firstName;
     private String lastName;
-    @Column(unique = true)
     private String email;
     private String password;
     private String profileImage;
@@ -34,6 +33,7 @@ public class AppUser implements UserDetails{
     private boolean enabled;
     @OneToMany
     private List<Token> tokens;
+    private String resetToken;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

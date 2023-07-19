@@ -1,5 +1,6 @@
 package com.sametech.library_management_system.service.serviceImplementation;
 
+import com.sametech.library_management_system.config.security.service.JwtService;
 import com.sametech.library_management_system.data.dto.response.ApiResponse;
 import com.sametech.library_management_system.data.models.token.Token;
 import com.sametech.library_management_system.data.models.users.AppUser;
@@ -21,13 +22,14 @@ import java.util.Optional;
 public class TokenService implements ITokenService {
     private final TokenRepository tokenRepository;
     private final EntityManager entityManager;
+    private final JwtService jwtService;
 
     @Override
     @Transactional
     public String generateAndSaveToken(AppUser appUser) {
         Optional<Token> existingToken =  tokenRepository.findTokenByAppUser(appUser);
         existingToken.ifPresent(tokenRepository::delete);
-        String generateToken = AppUtilities.generateRandomString(64);
+        String generateToken = jwtService.generateToken(appUser);
         Token token = Token.builder()
                 .appUser(entityManager.merge(appUser))
                 .token(generateToken)

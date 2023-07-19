@@ -25,8 +25,9 @@ public class AppConfig {
     private String mailUrl;
     @Value("${sendinblue.api.key}")
     private String mailApiKey;
-    @Value("${jwt.secret.key}")
-    private String jwtSecretKey;
+//    @Value("${jwt.secret.key}")
+//    private String jwtSecretKey;
+
     private final AppUserRepository userRepository;
 
 
@@ -40,10 +41,10 @@ public class AppConfig {
         return new ModelMapper();
     }
 
-    @Bean
-    public JwtUtil jwtUtil(){
-        return new JwtUtil(jwtSecretKey);
-    }
+//    @Bean
+//    public JwtUtil jwtUtil(){
+//        return new JwtUtil(jwtSecretKey);
+//    }
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -56,10 +57,7 @@ public class AppConfig {
                 .orElseThrow(()-> new UsernameNotFoundException("User not found"));
     }
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
-    }
+
 
     @Bean
     public AuthenticationProvider authenticationProvider(){
@@ -67,6 +65,11 @@ public class AppConfig {
         authProvider.setUserDetailsService(userDetailsService());
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
     }
 
 
