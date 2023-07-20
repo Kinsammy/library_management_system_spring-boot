@@ -120,14 +120,15 @@ public class AppUserService implements IAppUserService {
 
 
     @Override
-    public void sendResetPasswordMail(String email) {
+    public ApiResponse sendResetPasswordMail(String email) {
         var appUser = appUserRepository.findByEmail(email)
                 .orElseThrow(()-> new UserNotFoundException("User not found"));
 
-        String generateToken = jwtService.generateToken(appUser);
-        appUser.setResetToken(generateToken);
-        appUserRepository.save(appUser);
+        String generateToken = tokenService.generateAndSaveToken(appUser);
         sendResetNotification(appUser, generateToken);
+        return ApiResponse.builder()
+                .message("Check your email to get your token")
+                .build();
 
     }
 
@@ -143,18 +144,27 @@ public class AppUserService implements IAppUserService {
 
     @Override
     public ApiResponse resetPassword(PasswordRequest passwordRequest) {
-        Optional<Token> token = tokenRepository.findTokenByAppUserAndToken(getUserByEmail(passwordRequest.getEmail()), passwordRequest.getVerificationToken());
-        if (token.isEmpty()) throw new LibraryLogicException("No token found");
-        if (token.get().getExpiryTime().isBefore(LocalDateTime.now())){
+        Optional<Token> token = tokenRepository.findTokenByAppUserAndToken(getUserByEmail(
+                passwordRequest.getEmail()),
+                passwordRequest.getVerificationToken());
+
+        if (token.isEmpty()) throw new LibraryLogicException("Invalid or expired reset token");
+        Token validToken = token.get();
+        if (validToken.getExpiryTime().isBefore(LocalDateTime.now())){
             tokenRepository.delete(token.get());
-            throw new LibraryAuthenticationException("reset token not found");
+            throw new LibraryAuthenticationException("Reset token has expired");
         }
-        var appUser = getUserByEmail(token.get().getAppUser().getEmail());
+        var appUser = validToken.getAppUser();
+        if (!appUser.getEmail().equals(passwordRequest.getEmail())){
+            throw new LibraryLogicException(String.format("Invalid token for %s", passwordRequest.getEmail()));
+        }
+
         appUser.setPassword(passwordEncoder.encode(passwordRequest.getNewPassword()));
-        var updatedAppUser= updateAppUser(appUser);
-
-
-        return updatedAppUser;
+        updateAppUser(appUser);
+        tokenRepository.delete(validToken);
+        return ApiResponse.builder()
+                .message("Password has reset successful")
+                .build();
     }
 
     @Override

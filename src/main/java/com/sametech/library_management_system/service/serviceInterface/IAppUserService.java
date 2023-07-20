@@ -21,7 +21,7 @@ public interface IAppUserService {
     void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException;
     ApiResponse sendVerifyLink(@NotNull AppUser user);
 
-    void sendResetPasswordMail(String email);
+    ApiResponse sendResetPasswordMail(String email);
     ApiResponse resetPassword(PasswordRequest passwordRequest);
     ApiResponse updateAppUser(AppUser appUser);
     ApiResponse changePassword(PasswordRequest passwordRequest);

@@ -33,7 +33,7 @@ public class AppUser implements UserDetails{
     private boolean enabled;
     @OneToMany
     private List<Token> tokens;
-    private String resetToken;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

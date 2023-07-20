@@ -87,7 +87,7 @@ public class LibraryUserService implements ILibraryUserService {
         RegisterResponse registerResponse = new RegisterResponse();
         registerResponse.setId(savedLibraryUser.getId());
         registerResponse.setSuccess(true);
-        registerResponse.setMessage("User Registration Successful");
+        registerResponse.setMessage("User Registration Successful. Check your email to get your token");
         return registerResponse;
     }
 
