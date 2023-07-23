@@ -16,6 +16,14 @@ import java.util.Optional;
 
 public interface ILibraryUserService {
     RegisterResponse register(RegisterRequest request);
+    LibraryUser getLibraryUserById(Long libraryUserId);
+    void saveLibraryUser(LibraryUser libraryUser);
+    Optional<LibraryUser> getLibraryUserBy(Long libraryUserId);
+    ApiResponse updateLibraryUser(Long libraryUserId, JsonPatch updatePayLoad);
+    Page<LibraryUser> getAllLibraryUsersPerPage(int pageNumber);
+    ApiResponse updateLibraryUser(LibraryUser libraryUser);
+    void deleteLibraryUser(Long  libraryUserId);
+
 
 
 

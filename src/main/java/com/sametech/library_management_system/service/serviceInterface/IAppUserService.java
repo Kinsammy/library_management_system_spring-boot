@@ -5,6 +5,7 @@ import com.sametech.library_management_system.data.dto.request.PasswordRequest;
 import com.sametech.library_management_system.data.dto.request.VerifyRequest;
 import com.sametech.library_management_system.data.dto.response.ApiResponse;
 import com.sametech.library_management_system.data.dto.response.AuthenticationResponse;
+import com.sametech.library_management_system.data.dto.response.RegisterResponse;
 import com.sametech.library_management_system.data.dto.response.VerifyResponse;
 import com.sametech.library_management_system.data.models.users.AppUser;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,4 +28,8 @@ public interface IAppUserService {
     ApiResponse changePassword(PasswordRequest passwordRequest);
     AppUser getUserByEmail(String email);
     ApiResponse uploadProfileImage(Long userId, MultipartFile profileImage);
+
+    boolean emailExists(String email);
+
+    RegisterResponse getRegisterResponse(AppUser appUser);
 }

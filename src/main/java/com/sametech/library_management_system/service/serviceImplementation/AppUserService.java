@@ -5,10 +5,12 @@ import com.sametech.library_management_system.config.security.service.JwtService
 import com.sametech.library_management_system.data.dto.request.*;
 import com.sametech.library_management_system.data.dto.response.ApiResponse;
 import com.sametech.library_management_system.data.dto.response.AuthenticationResponse;
+import com.sametech.library_management_system.data.dto.response.RegisterResponse;
 import com.sametech.library_management_system.data.dto.response.VerifyResponse;
 import com.sametech.library_management_system.data.models.token.Token;
 import com.sametech.library_management_system.data.models.token.TokenType;
 import com.sametech.library_management_system.data.models.users.AppUser;
+import com.sametech.library_management_system.data.models.users.LibraryUser;
 import com.sametech.library_management_system.data.repository.AppUserRepository;
 import com.sametech.library_management_system.data.repository.TokenRepository;
 import com.sametech.library_management_system.exception.LibraryAuthenticationException;
@@ -135,8 +137,7 @@ public class AppUserService implements IAppUserService {
     private void sendResetNotification(AppUser appUser, String token) {
         EmailNotificationRequest request = new EmailNotificationRequest();
         request.getTo().add(new Recipient(
-                appUser.getUsername(), appUser.getEmail()
-        ));
+                appUser.getUsername(), appUser.getEmail()));
         request.setSubject("Welcome to SamTech: Reset Your Password");
         request.setHtmlContent("To reset your password enter the following digits on your web browser\n\n" + token);
         mailService.sendMail(request);
@@ -216,5 +217,18 @@ public class AppUserService implements IAppUserService {
     @Override
     public ApiResponse uploadProfileImage(Long userId, MultipartFile profileImage) {
         return null;
+    }
+
+    @Override
+    public RegisterResponse getRegisterResponse(AppUser savedLibraryUser) {
+        RegisterResponse registerResponse = new RegisterResponse();
+        registerResponse.setId(savedLibraryUser.getId());
+        registerResponse.setSuccess(true);
+        registerResponse.setMessage("User Registration is successful. Check your email to get your token");
+        return registerResponse;
+    }
+    @Override
+    public boolean emailExists(String email) {
+        return appUserRepository.findByEmail(email).isPresent();
     }
 }
