@@ -15,7 +15,7 @@ public class Author {
     private String firstName;
     private String lastName;
     private String dateOfBirth;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "book_id")
-    private Book book;
+//    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    @JoinColumn(name = "book_id")
+//    private Book book;
 }

@@ -1,8 +1,10 @@
 package com.sametech.library_management_system.service.serviceImplementation;
 
 
+import com.sametech.library_management_system.data.dto.request.BookRequest;
 import com.sametech.library_management_system.data.dto.response.ApiResponse;
 import com.sametech.library_management_system.data.dto.response.BookResponse;
+import com.sametech.library_management_system.data.models.entity.Author;
 import com.sametech.library_management_system.data.models.entity.Book;
 import com.sametech.library_management_system.data.repository.BookRepository;
 import com.sametech.library_management_system.exception.LibraryLogicException;
@@ -13,6 +15,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static com.sametech.library_management_system.util.AppUtilities.NUMBER_OF_ITEMS_PER_PAGE;
@@ -22,8 +26,15 @@ import static com.sametech.library_management_system.util.AppUtilities.NUMBER_OF
 public class BookService implements IBookService {
     private final BookRepository bookRepository;
     @Override
-    public BookResponse addNewBook(Book book) {
-        bookRepository.save(book);
+    public BookResponse addNewBook(BookRequest bookRequest) {
+        var book = Book.builder()
+                .title(bookRequest.getTitle())
+                .isbn(bookRequest.getIsbn())
+                .description(bookRequest.getDescription())
+                .genre(bookRequest.getGenre())
+                .dateAdded(LocalDateTime.now().toString())
+                .authors(bookRequest.getAuthor())
+                .build();
         return BookResponse.builder()
                 .id(book.getId())
                 .message("Book created successfully")

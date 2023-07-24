@@ -9,7 +9,7 @@ import org.springframework.data.domain.Page;
 import java.util.Optional;
 
 public interface IBookService {
-    BookResponse addNewBook(Book book);
+    BookResponse addNewBook(BookRequest book);
     Optional<Book> getBookById(Long bookId);
     void saveBook(Book book);
     Page<Book> getAllBooksPerPage(int pageNumber);

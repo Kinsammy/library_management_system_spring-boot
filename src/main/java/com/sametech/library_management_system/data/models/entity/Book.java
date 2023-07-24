@@ -23,6 +23,6 @@ public class Book {
     private String description;
     private String dateAdded;
     private Genre genre;
-    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    private List<Author> authors;
+    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    private Author authors;
 }

@@ -1,5 +1,6 @@
 package com.sametech.library_management_system.service.serviceImplementation;
 
+import com.sametech.library_management_system.data.dto.request.AuthorRequest;
 import com.sametech.library_management_system.data.dto.response.ApiResponse;
 import com.sametech.library_management_system.data.dto.response.BookResponse;
 import com.sametech.library_management_system.data.models.entity.Author;
@@ -23,10 +24,14 @@ public class AuthorService implements IAuthorService {
 
 
     @Override
-    public BookResponse addNewAuthor(Author author) {
+    public BookResponse addNewAuthor(AuthorRequest request) {
+        var author = Author.builder()
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .dateOfBirth(request.getDateOfBirth())
+                .build();
         authorRepository.save(author);
         return BookResponse.builder()
-                .id(author.getId())
                 .message("Author created successfully")
                 .build();
     }
