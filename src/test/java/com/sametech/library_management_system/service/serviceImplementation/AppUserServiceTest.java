@@ -16,9 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class AppUserServiceTest {
     @Autowired
     private IAppUserService appUserService;
-
     private VerifyRequest verifyRequest;
-    @Autowired
     private AuthenticationRequest request;
 
     @BeforeEach
@@ -26,6 +24,9 @@ class AppUserServiceTest {
         verifyRequest = new VerifyRequest();
         verifyRequest.setEmail("fanusamuel@gmail.com");
         verifyRequest.setVerificationToken("BmUK60jr0LHAVr_-dZMv0bkjVcVCdmsqn5WmOEW21oTC01QrmtftBen_LtbD2nvTvHkDUdLR_vN_ebIzAcTY8g");
+        request = new AuthenticationRequest();
+        request.setEmail("fanusamuel@gmail.com");
+        request.setPassword("testpassword");
     }
     @Test
     void verifyAccountWithToken() {
@@ -34,7 +35,9 @@ class AppUserServiceTest {
     }
 
     @Test
-    void authenticate() {
+    void loginTest() {
+        var response = appUserService.login(request);
+        assertThat(response).isNotNull();
     }
 
     @Test

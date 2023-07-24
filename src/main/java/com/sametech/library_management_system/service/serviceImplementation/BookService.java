@@ -1,6 +1,6 @@
 package com.sametech.library_management_system.service.serviceImplementation;
 
-import com.sametech.library_management_system.data.dto.request.BookRequest;
+
 import com.sametech.library_management_system.data.dto.response.ApiResponse;
 import com.sametech.library_management_system.data.dto.response.BookResponse;
 import com.sametech.library_management_system.data.models.entity.Book;
@@ -59,6 +59,7 @@ public class BookService implements IBookService {
                 new LibraryLogicException(
                         String.format("Book with id %d does not exist", book.getId())
                 ));
+
         bookRepository.save(book);
         return ApiResponse.builder()
                 .message("Book successfully updated")

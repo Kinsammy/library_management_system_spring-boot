@@ -10,7 +10,6 @@ import com.sametech.library_management_system.data.dto.response.VerifyResponse;
 import com.sametech.library_management_system.data.models.token.Token;
 import com.sametech.library_management_system.data.models.token.TokenType;
 import com.sametech.library_management_system.data.models.users.AppUser;
-import com.sametech.library_management_system.data.models.users.LibraryUser;
 import com.sametech.library_management_system.data.repository.AppUserRepository;
 import com.sametech.library_management_system.data.repository.TokenRepository;
 import com.sametech.library_management_system.exception.LibraryAuthenticationException;
