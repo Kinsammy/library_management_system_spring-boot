@@ -22,7 +22,9 @@ public class Book {
     private String isbn;
     private String description;
     private String dateAdded;
+    @Enumerated(EnumType.STRING)
     private Genre genre;
     @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    private Author authors;
+    private Author author;
+
 }

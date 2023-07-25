@@ -33,7 +33,7 @@ public class BookService implements IBookService {
                 .description(bookRequest.getDescription())
                 .genre(bookRequest.getGenre())
                 .dateAdded(LocalDateTime.now().toString())
-                .authors(bookRequest.getAuthor())
+                .author(bookRequest.getAuthor())
                 .build();
         return BookResponse.builder()
                 .id(book.getId())
@@ -75,5 +75,15 @@ public class BookService implements IBookService {
         return ApiResponse.builder()
                 .message("Book successfully updated")
                 .build();
+    }
+
+    @Override
+    public List<Book> geBooksByTitle(String title) {
+        return bookRepository.findBookByTitleContainingIgnoreCase(title);
+    }
+
+    @Override
+    public List<Book> geBooksByAuthor(String authorName) {
+        return bookRepository.findByAuthorNameContainingIgnoreCase(authorName);
     }
 }

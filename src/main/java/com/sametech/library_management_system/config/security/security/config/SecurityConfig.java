@@ -22,6 +22,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+import static com.sametech.library_management_system.data.models.users.Role.*;
+
 @Configuration
 @AllArgsConstructor
 @EnableWebSecurity
@@ -31,6 +33,7 @@ public class SecurityConfig {
     private final LibraryAuthenticationFilter authenticationFilter;
     private final LogoutHandler logoutHandler;
     private static final String[] AUTHENTICATION_WHITELIST = {
+            "/api/v1/auth/**",
             "/v2/api-docs",
             "/v3/api-docs",
             "/v3/api-docs/**",
@@ -42,11 +45,11 @@ public class SecurityConfig {
             "webjars/**",
             "/swagger-ui.html"
     };
-    private static final String[] ALL_USERS_WHITELIST = {
-            "/api/v1/auth/register",
-            "/api/v1/auth/verify",
-            "/api/v1/auth/login"
-    };
+//    private static final String[] ALL_USERS_WHITELIST = {
+//            "/api/v1/auth/register",
+//            "/api/v1/auth/verify",
+//            "/api/v1/auth/login"
+//    };
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -61,10 +64,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize-> authorize
                         .requestMatchers(AUTHENTICATION_WHITELIST)
                         .permitAll()
-                        .requestMatchers(ALL_USERS_WHITELIST)
-                        .permitAll()
-                        .requestMatchers("/api/v1/auth/**")
-                        .authenticated()
+//                        .requestMatchers(ALL_USERS_WHITELIST).hasAnyRole(LIBRARY_USER.name())
+
                         .anyRequest()
                         .authenticated())
 

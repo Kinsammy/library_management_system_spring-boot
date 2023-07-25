@@ -47,7 +47,22 @@ public class AppUserService implements IAppUserService {
     private final IMailService mailService;
 
 
-
+    @Override
+    public AuthenticationResponse createAdminAndLibrarian(RegisterRequest request) {
+        var user = AppUser.builder()
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(request.getRole())
+                .enabled(true)
+                .build();
+    var savedUser = appUserRepository.save(user);
+    var jwtToken = jwtService.generateToken(user);
+    revokeAllUserTokens(user);
+    saveUserToken(savedUser, jwtToken);
+    var refreshToken = jwtService.generateRefreshToken(user);
+    return getAuthenticationResponse(jwtToken, refreshToken);
+    }
 
     @Override
     public VerifyResponse verifyAccountWithToken(VerifyRequest request) {

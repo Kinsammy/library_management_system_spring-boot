@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/books")
 @AllArgsConstructor
@@ -42,5 +44,18 @@ public class BookController {
     @DeleteMapping("{bookId}")
     public void deleteBook(@PathVariable("bookId") Long bookId){
         bookService.deleteBook(bookId);
+    }
+
+
+    @GetMapping("/search/title")
+    public ResponseEntity<List<Book>> searchBookByTitle(@RequestParam("title") String title){
+        List<Book> books = bookService.geBooksByTitle(title);
+        return ResponseEntity.status(HttpStatus.OK).body(books);
+    }
+
+    @GetMapping("/search/author")
+    public ResponseEntity<List<Book>> searchBookByAuthor(@RequestParam("author") String author){
+        List<Book> books = bookService.geBooksByTitle(author);
+        return ResponseEntity.status(HttpStatus.OK).body(books);
     }
 }

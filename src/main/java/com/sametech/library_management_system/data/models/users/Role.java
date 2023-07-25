@@ -14,7 +14,19 @@ import static com.sametech.library_management_system.data.models.users.Permissio
 
 @RequiredArgsConstructor
 public enum Role {
-    LIBRARY_USER(Collections.emptySet()),
+    LIBRARY_USER(
+            Set.of(
+                    LIBRARY_USER_REGISTER,
+                    LIBRARY_USER_VERIFY,
+                    LIBRARY_USER_LOGIN,
+                    LIBRARY_USER_RESET_PASSWORD,
+                    LIBRARY_USER_RESET_PASSWORD_MAIL,
+                    LIBRARY_USER_REFRESH_TOKEN,
+                    LIBRARY_USER_VIEW_ALL_BOOKS,
+                    LIBRARY_USER_VIEW_A_BOOK
+
+            )
+    ),
     ADMIN(
             Set.of(
                     ADMIN_READ,
@@ -24,7 +36,15 @@ public enum Role {
                     LIBRARIAN_READ,
                     LIBRARIAN_CREATE,
                     LIBRARIAN_UPDATE,
-                    LIBRARIAN_DELETE
+                    LIBRARIAN_DELETE,
+                    LIBRARY_USER_REGISTER,
+                    LIBRARY_USER_VERIFY,
+                    LIBRARY_USER_LOGIN,
+                    LIBRARY_USER_RESET_PASSWORD,
+                    LIBRARY_USER_RESET_PASSWORD_MAIL,
+                    LIBRARY_USER_REFRESH_TOKEN,
+                    LIBRARY_USER_VIEW_ALL_BOOKS,
+                    LIBRARY_USER_VIEW_A_BOOK
             )
     ),
     LIBRARIAN(
@@ -32,7 +52,8 @@ public enum Role {
                     LIBRARIAN_READ,
                     LIBRARIAN_CREATE,
                     LIBRARIAN_UPDATE,
-                    LIBRARIAN_DELETE
+                    LIBRARIAN_DELETE,
+                    LIBRARY_USER_LOGIN
             )
     )
     ;

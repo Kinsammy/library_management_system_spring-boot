@@ -22,19 +22,15 @@ class BookServiceTest {
     @Autowired
     private IBookService bookService;
 
-    private Book bookRequest;
+    private BookRequest bookRequest;
 
     @BeforeEach
     void setUp(){
-        Author newAuthor = Author.builder()
-                .firstName("Ade")
-                .build();
-        bookRequest = Book.builder()
+        bookRequest = BookRequest.builder()
                 .title("Spring boot in action")
                 .isbn("isbn-17")
                 .description("This book is base on Sprint security")
                 .genre(Genre.FINANCIAL)
-                .dateAdded(LocalDateTime.now().toString())
                 .build();
 
 

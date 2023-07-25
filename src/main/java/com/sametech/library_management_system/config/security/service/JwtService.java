@@ -1,6 +1,5 @@
 package com.sametech.library_management_system.config.security.service;
 
-import com.sametech.library_management_system.config.security.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

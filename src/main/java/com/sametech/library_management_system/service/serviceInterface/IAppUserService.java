@@ -2,6 +2,7 @@ package com.sametech.library_management_system.service.serviceInterface;
 
 import com.sametech.library_management_system.data.dto.request.AuthenticationRequest;
 import com.sametech.library_management_system.data.dto.request.PasswordRequest;
+import com.sametech.library_management_system.data.dto.request.RegisterRequest;
 import com.sametech.library_management_system.data.dto.request.VerifyRequest;
 import com.sametech.library_management_system.data.dto.response.ApiResponse;
 import com.sametech.library_management_system.data.dto.response.AuthenticationResponse;
@@ -16,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 public interface IAppUserService {
-
+    AuthenticationResponse createAdminAndLibrarian(RegisterRequest request);
     VerifyResponse verifyAccountWithToken(VerifyRequest request);
     AuthenticationResponse login(AuthenticationRequest request);
     void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException;

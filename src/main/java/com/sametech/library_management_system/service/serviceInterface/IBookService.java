@@ -6,6 +6,7 @@ import com.sametech.library_management_system.data.dto.response.BookResponse;
 import com.sametech.library_management_system.data.models.entity.Book;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface IBookService {
@@ -15,4 +16,6 @@ public interface IBookService {
     Page<Book> getAllBooksPerPage(int pageNumber);
     void deleteBook(Long  bookId);
     ApiResponse updateBook(Book book);
+    List<Book> geBooksByTitle(String title);
+    List<Book> geBooksByAuthor(String authorName);
 }

@@ -1,7 +1,6 @@
 package com.sametech.library_management_system.config.app;
 
 import com.sametech.library_management_system.config.mail.MailConfig;
-import com.sametech.library_management_system.config.security.util.JwtUtil;
 import com.sametech.library_management_system.data.repository.AppUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -41,10 +40,6 @@ public class AppConfig {
         return new ModelMapper();
     }
 
-//    @Bean
-//    public JwtUtil jwtUtil(){
-//        return new JwtUtil(jwtSecretKey);
-//    }
 
     @Bean
     public PasswordEncoder passwordEncoder(){

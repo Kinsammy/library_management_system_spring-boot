@@ -21,7 +21,6 @@ public class BookInstance {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String imprint;
     @Enumerated(EnumType.STRING)
     private BookStatus bookStatus;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

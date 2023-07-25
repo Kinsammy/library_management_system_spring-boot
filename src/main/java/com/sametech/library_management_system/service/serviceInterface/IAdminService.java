@@ -7,4 +7,5 @@ import java.util.Set;
 
 public interface IAdminService {
     ApiResponse sendInviteRequests(Set<AdminInviteRequest> adminInviteRequest);
+    
 }

@@ -7,11 +7,13 @@ import com.sametech.library_management_system.data.dto.response.ApiResponse;
 import com.sametech.library_management_system.data.dto.response.AuthenticationResponse;
 import com.sametech.library_management_system.data.dto.response.VerifyResponse;
 import com.sametech.library_management_system.service.serviceInterface.IAppUserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -19,7 +21,9 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api/v1/auth")
 @AllArgsConstructor
-
+//@Tag(name = "library user")
+//@Tag(name = "admin")
+//@Tag(name = "librarian")
 public class AppUserController {
     private final IAppUserService appUserService;
 
@@ -29,6 +33,7 @@ public class AppUserController {
     }
 
     @PostMapping("/login")
+    @PreAuthorize("hasAuthority('libraran:create')")
     public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request){
         return ResponseEntity.ok(appUserService.login(request));
     }
