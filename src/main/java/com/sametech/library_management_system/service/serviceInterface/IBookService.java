@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface IBookService {
     BookResponse addNewBook(BookRequest book);
     Optional<Book> getBookById(Long bookId);
-    void saveBook(Book book);
+    Book saveBook(Book book);
     Page<Book> getAllBooksPerPage(int pageNumber);
     void deleteBook(Long  bookId);
     ApiResponse updateBook(Book book);

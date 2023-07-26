@@ -26,6 +26,9 @@ public class Book {
     private Genre genre;
     @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private Author author;
+    @OneToMany(mappedBy = "book")
+    private List<BookInstance> instances;
+
 
 
 }

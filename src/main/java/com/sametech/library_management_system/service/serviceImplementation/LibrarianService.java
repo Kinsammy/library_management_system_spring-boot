@@ -9,6 +9,7 @@ import com.sametech.library_management_system.data.dto.response.ApiResponse;
 import com.sametech.library_management_system.data.dto.response.RegisterResponse;
 import com.sametech.library_management_system.data.models.users.AppUser;
 import com.sametech.library_management_system.data.models.users.Librarian;
+import com.sametech.library_management_system.data.models.users.Role;
 import com.sametech.library_management_system.data.repository.LibrarianRepository;
 import com.sametech.library_management_system.exception.LibraryLogicException;
 import com.sametech.library_management_system.service.serviceInterface.IAppUserService;
@@ -44,6 +45,7 @@ public class LibrarianService implements ILibrarianService {
         var librarianDetails = modelMapper.map(request, AppUser.class);
         var librarian = new Librarian();
         getLibrarianDetails(request, librarianDetails, librarian);
+
         return appUserService.getRegisterResponse(librarianDetails);
     }
 
@@ -52,7 +54,8 @@ public class LibrarianService implements ILibrarianService {
         librarianDetails.setLastName(request.getLastName());
         librarianDetails.setEmail(request.getEmail());
         librarianDetails.setPassword(passwordEncoder.encode(request.getPassword()));
-        librarianDetails.setRole(request.getRole());
+        librarianDetails.setRole(Role.LIBRARIAN);
+        librarianDetails.setEnabled(true);
         librarianDetails.setCreatedAt(LocalDateTime.now().toString());
         librarian.setUserDetails(librarianDetails);
         saveLibrarian(librarian);

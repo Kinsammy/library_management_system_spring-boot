@@ -22,8 +22,10 @@ public class BookInstance {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private BookStatus bookStatus;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "book_id", nullable = false)
     private Book book;
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private LibraryUser borrowedBy;

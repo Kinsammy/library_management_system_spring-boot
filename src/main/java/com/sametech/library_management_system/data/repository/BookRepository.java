@@ -10,5 +10,5 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     List<Book> findBookByTitleContainingIgnoreCase(String title);
     @Query("SELECT b FROM Book b WHERE CONCAT(b.author.firstName, ' ', b.author.lastName) LIKE %:author%")
     List<Book> findByAuthorNameContainingIgnoreCase(String author);
-    List<Book> findByTitleContainingIgnoreCaseOrAuthorContainingIgnoreCase(String title, String author);
+//    List<Book> findByTitleContainingIgnoreCaseOrAuthorContainingIgnoreCase(String title, String author);
 }

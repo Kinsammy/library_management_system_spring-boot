@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookRequest {
+    private Long id;
     private String title;
     private String isbn;
     private String description;
