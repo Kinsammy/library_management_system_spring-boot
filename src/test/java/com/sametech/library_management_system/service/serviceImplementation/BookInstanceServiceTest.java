@@ -42,29 +42,29 @@ class BookInstanceServiceTest {
 
     @Mock
     private BookInstanceRepository bookInstanceRepository;
-    @BeforeEach
-    void setUp() {
-        Long libraryUserId = 1L;
-        String title = "Silence, The (Das letzte Schweigen)";
-        Long librarianId = 1L;
-
-        var libraryUser = new LibraryUser();
-        Mockito.when(libraryUserRepository.findById(libraryUserId))
-                .thenReturn(Optional.of(libraryUser));
-
-        var book = new Book();
-        book.setTitle(title);
-        Mockito.when(bookRepository.findBookByTitleContainingIgnoreCase(title)).thenReturn(List.of(book));
-        var librarian = new Librarian();
-        Mockito.when(librarianRepository.findById(librarianId))
-                .thenReturn(Optional.of(librarian));
-
-        var availableBookInstance = new BookInstance();
-        availableBookInstance.setBookStatus(BookStatus.AVAILABLE);
-        availableBookInstance.setBook(book);
-        List<BookInstance> availableBookInstances = List.of(availableBookInstance);
-        Mockito.when(bookInstanceRepository.findAvailableBookInstancesByBook(book)).thenReturn(availableBookInstances);
-    }
+//    @BeforeEach
+//    void setUp() {
+//        Long libraryUserId = 1L;
+//        String title = "Silence, The (Das letzte Schweigen)";
+//        Long librarianId = 1L;
+//
+//        var libraryUser = new LibraryUser();
+//        Mockito.when(libraryUserRepository.findById(libraryUserId))
+//                .thenReturn(Optional.of(libraryUser));
+//
+//        var book = new Book();
+//        book.setTitle(title);
+//        Mockito.when(bookRepository.findBookByTitleContainingIgnoreCase(title)).thenReturn(List.of(book));
+//        var librarian = new Librarian();
+//        Mockito.when(librarianRepository.findById(librarianId))
+//                .thenReturn(Optional.of(librarian));
+//
+//        var availableBookInstance = new BookInstance();
+//        availableBookInstance.setBookStatus(BookStatus.AVAILABLE);
+//        availableBookInstance.setBook(book);
+//        List<BookInstance> availableBookInstances = List.of(availableBookInstance);
+//        Mockito.when(bookInstanceRepository.findAvailableBookInstancesByBook(book)).thenReturn(availableBookInstances);
+//    }
 
     @Test
     void borrowBookRequestTest() {

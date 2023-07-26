@@ -18,9 +18,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class BookInstanceController {
     private final IBookInstanceService bookInstanceService;
 
-    @PostMapping("/{libraryUserId}/{title}")
+    @PostMapping("/borrow/{libraryUserId}/{title}")
     public ResponseEntity<ApiResponse> borrowBookRequest(@PathVariable Long libraryUserId, @PathVariable String title){
         var response = bookInstanceService.borrowBookRequest(libraryUserId, title);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/approve/{bookInstanceId}/{librarianId}")
+    public ResponseEntity<ApiResponse> approveBorrowBookRequest(@PathVariable Long bookInstanceId, @PathVariable Long librarianId){
+        var response = bookInstanceService.approveBorrowBookRequest(bookInstanceId, librarianId);
         return ResponseEntity.ok(response);
     }
 }
