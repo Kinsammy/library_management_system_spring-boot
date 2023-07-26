@@ -27,4 +27,5 @@ public class Book {
     @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private Author author;
 
+
 }

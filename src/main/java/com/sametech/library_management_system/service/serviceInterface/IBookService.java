@@ -16,6 +16,6 @@ public interface IBookService {
     Page<Book> getAllBooksPerPage(int pageNumber);
     void deleteBook(Long  bookId);
     ApiResponse updateBook(Book book);
-    List<Book> geBooksByTitle(String title);
-    List<Book> geBooksByAuthor(String authorName);
+    List<Book> searchBooksByTitle(String title);
+    List<Book> searchBooksByAuthor(String authorName);
 }

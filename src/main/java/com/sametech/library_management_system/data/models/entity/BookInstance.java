@@ -23,11 +23,14 @@ public class BookInstance {
     private Long id;
     @Enumerated(EnumType.STRING)
     private BookStatus bookStatus;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Book> books;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Book book;
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private LibraryUser borrowedBy;
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Librarian approvedBy;
     private LocalDateTime borrowedDate;
+    private LocalDateTime approvedDate;
+    private LocalDateTime returnedDate;
+
 }

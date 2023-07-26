@@ -49,13 +49,13 @@ public class BookController {
 
     @GetMapping("/search/title")
     public ResponseEntity<List<Book>> searchBookByTitle(@RequestParam("title") String title){
-        List<Book> books = bookService.geBooksByTitle(title);
+        List<Book> books = bookService.searchBooksByTitle(title);
         return ResponseEntity.status(HttpStatus.OK).body(books);
     }
 
     @GetMapping("/search/author")
     public ResponseEntity<List<Book>> searchBookByAuthor(@RequestParam("author") String author){
-        List<Book> books = bookService.geBooksByTitle(author);
+        List<Book> books = bookService.searchBooksByAuthor(author);
         return ResponseEntity.status(HttpStatus.OK).body(books);
     }
 }

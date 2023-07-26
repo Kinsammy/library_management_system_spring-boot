@@ -21,9 +21,8 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api/v1/auth")
 @AllArgsConstructor
-//@Tag(name = "library user")
-//@Tag(name = "admin")
-//@Tag(name = "librarian")
+@Tag(name = "Application User")
+
 public class AppUserController {
     private final IAppUserService appUserService;
 
@@ -33,7 +32,6 @@ public class AppUserController {
     }
 
     @PostMapping("/login")
-    @PreAuthorize("hasAuthority('libraran:create')")
     public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request){
         return ResponseEntity.ok(appUserService.login(request));
     }

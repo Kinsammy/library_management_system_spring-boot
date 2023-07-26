@@ -18,29 +18,29 @@ public class LibraryManagementSystemApplication {
 		SpringApplication.run(LibraryManagementSystemApplication.class, args);
 	}
 
-	@Bean
-	public CommandLineRunner commandLineRunner(
-			AppUserService userService
-	) {
-		return args -> {
-			var admin = RegisterRequest.builder()
-					.firstName("Samuel")
-					.lastName("Fanu")
-					.email("admin@samtech.com")
-					.password("adminpassword")
-					.role(ADMIN)
-					.build();
-			System.out.printf("Admin token: %s%n", userService.createAdminAndLibrarian(admin).getAccessToken());
-
-			var librarian = RegisterRequest.builder()
-					.firstName("Samuel")
-					.lastName("Fanu")
-					.email("librarian@samtech.com")
-					.password("librarianpassword")
-					.role(LIBRARIAN)
-					.build();
-			System.out.printf("Librarian token: %s%n", userService.createAdminAndLibrarian(librarian).getAccessToken());
-		};
-	}
+//	@Bean
+//	public CommandLineRunner commandLineRunner(
+//			AppUserService userService
+//	) {
+//		return args -> {
+//			var admin = RegisterRequest.builder()
+//					.firstName("Samuel")
+//					.lastName("Fanu")
+//					.email("admin@samtech.com")
+//					.password("adminpassword")
+//					.role(ADMIN)
+//					.build();
+//			System.out.printf("Admin token: %s%n", userService.createAdminAndLibrarian(admin).getAccessToken());
+//
+//			var librarian = RegisterRequest.builder()
+//					.firstName("Samuel")
+//					.lastName("Fanu")
+//					.email("librarian@samtech.com")
+//					.password("librarianpassword")
+//					.role(LIBRARIAN)
+//					.build();
+//			System.out.printf("Librarian token: %s%n", userService.createAdminAndLibrarian(librarian).getAccessToken());
+//		};
+//	}
 
 }

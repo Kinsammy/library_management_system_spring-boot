@@ -7,6 +7,7 @@ import com.sametech.library_management_system.data.dto.response.BookResponse;
 import com.sametech.library_management_system.data.models.entity.Author;
 import com.sametech.library_management_system.data.models.entity.Book;
 import com.sametech.library_management_system.data.repository.BookRepository;
+import com.sametech.library_management_system.exception.BookNotFoundException;
 import com.sametech.library_management_system.exception.LibraryLogicException;
 import com.sametech.library_management_system.service.serviceInterface.IBookService;
 import lombok.AllArgsConstructor;
@@ -78,12 +79,22 @@ public class BookService implements IBookService {
     }
 
     @Override
-    public List<Book> geBooksByTitle(String title) {
-        return bookRepository.findBookByTitleContainingIgnoreCase(title);
+    public List<Book> searchBooksByTitle(String title) {
+        List<Book> books = bookRepository.findBookByTitleContainingIgnoreCase(title);
+
+        if (books.isEmpty()) {
+            throw new BookNotFoundException("No books found with the given title.");
+        }
+
+        return books;
     }
 
     @Override
-    public List<Book> geBooksByAuthor(String authorName) {
-        return bookRepository.findByAuthorNameContainingIgnoreCase(authorName);
+    public List<Book> searchBooksByAuthor(String authorName) {
+        List<Book> books = bookRepository.findByAuthorNameContainingIgnoreCase(authorName);
+        if (books.isEmpty()){
+            throw new BookNotFoundException("No books found with the given author.");
+        }
+        return books;
     }
 }

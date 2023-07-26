@@ -43,7 +43,6 @@ public class LibraryUserController {
     }
 
     @GetMapping("{libraryUserId}")
-    @PreAuthorize("hasAuthority('admin:read')")
     public ResponseEntity<?> getLibraryUserById(@PathVariable Long libraryUserId){
         var foundLibraryUser = libraryUserService.getLibraryUserById(libraryUserId);
         return ResponseEntity.status(HttpStatus.OK).body(foundLibraryUser);
@@ -72,10 +71,7 @@ public class LibraryUserController {
     }
 
     @DeleteMapping("{libraryUserId}")
-    @PreAuthorize("hasAuthority('admin:delete')")
-    public void deleteLibraryUser(
-            @PathVariable("libraryUserId")
-            Long libraryUserId){
+    public void deleteLibraryUser(@PathVariable("libraryUserId") Long libraryUserId){
         libraryUserService.deleteLibraryUser(libraryUserId);
     }
 }
