@@ -18,15 +18,30 @@ import org.springframework.web.bind.annotation.RestController;
 public class BookInstanceController {
     private final IBookInstanceService bookInstanceService;
 
-    @PostMapping("/borrow/{libraryUserId}/{title}")
+    @PostMapping("/borrow-book/{libraryUserId}/{title}")
     public ResponseEntity<ApiResponse> borrowBookRequest(@PathVariable Long libraryUserId, @PathVariable String title){
         var response = bookInstanceService.borrowBookRequest(libraryUserId, title);
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/approve/{bookInstanceId}/{librarianId}")
+    @PostMapping("/approve-borrow/{bookInstanceId}/{librarianId}")
     public ResponseEntity<ApiResponse> approveBorrowBookRequest(@PathVariable Long bookInstanceId, @PathVariable Long librarianId){
         var response = bookInstanceService.approveBorrowBookRequest(bookInstanceId, librarianId);
         return ResponseEntity.ok(response);
     }
+
+
+    @PostMapping("/return-book/{libraryUserId}/{bookInstanceId}")
+    public ResponseEntity<ApiResponse> returnBookRequest(@PathVariable Long libraryUserId, @PathVariable Long bookInstanceId){
+        var response = bookInstanceService.returnBookRequest(libraryUserId, bookInstanceId);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/approve-return/{bookInstanceId}/{librarianId}")
+    public ResponseEntity<ApiResponse> approveReturnBookRequest(@PathVariable Long bookInstanceId, @PathVariable Long librarianId){
+        var response = bookInstanceService.approveReturnBookRequest(bookInstanceId, librarianId);
+        return ResponseEntity.ok(response);
+    }
+
+
 }

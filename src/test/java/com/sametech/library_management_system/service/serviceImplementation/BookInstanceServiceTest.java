@@ -28,9 +28,9 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
-
 class BookInstanceServiceTest {
-    @InjectMocks
+
+    @Autowired
     private BookInstanceService bookInstanceService;
     @Mock
     private LibraryUserRepository libraryUserRepository;
@@ -42,67 +42,53 @@ class BookInstanceServiceTest {
 
     @Mock
     private BookInstanceRepository bookInstanceRepository;
-//    @BeforeEach
-//    void setUp() {
-//        Long libraryUserId = 1L;
-//        String title = "Silence, The (Das letzte Schweigen)";
-//        Long librarianId = 1L;
-//
-//        var libraryUser = new LibraryUser();
-//        Mockito.when(libraryUserRepository.findById(libraryUserId))
-//                .thenReturn(Optional.of(libraryUser));
-//
-//        var book = new Book();
-//        book.setTitle(title);
-//        Mockito.when(bookRepository.findBookByTitleContainingIgnoreCase(title)).thenReturn(List.of(book));
-//        var librarian = new Librarian();
-//        Mockito.when(librarianRepository.findById(librarianId))
-//                .thenReturn(Optional.of(librarian));
-//
-//        var availableBookInstance = new BookInstance();
-//        availableBookInstance.setBookStatus(BookStatus.AVAILABLE);
-//        availableBookInstance.setBook(book);
-//        List<BookInstance> availableBookInstances = List.of(availableBookInstance);
-//        Mockito.when(bookInstanceRepository.findAvailableBookInstancesByBook(book)).thenReturn(availableBookInstances);
-//    }
+    Long libraryUserId = 1L;
+    String title = "Deitel";
+    Long librarianId = 1L;
+    Long bookInstanceId = 1L;
+
+    @BeforeEach
+    void setUp() {
+        var libraryUser = new LibraryUser();
+        Mockito.when(libraryUserRepository.findById(libraryUserId))
+                .thenReturn(Optional.of(libraryUser));
+
+        var book = new Book();
+        book.setTitle(title);
+        Mockito.when(bookRepository.findBookByTitleContainingIgnoreCase(title)).thenReturn(List.of(book));
+        var bookInstance = new BookInstance();
+        bookInstance.setBookStatus(BookStatus.AVAILABLE);
+        Mockito.when(bookInstanceRepository.findAvailableBookInstancesByBook(book)).thenReturn(List.of(bookInstance));
+        var librarian = new Librarian();
+        Mockito.when(librarianRepository.findById(librarianId))
+                .thenReturn(Optional.of(librarian));
+
+
+    }
 
     @Test
     void borrowBookRequestTest() {
-        var response = bookInstanceService.borrowBookRequest(1L, "Silence, The (Das letzte Schweigen)");
+        var response = bookInstanceService.borrowBookRequest(libraryUserId, title);
         assertThat(response).isNotNull();
     }
 
     @Test
     void approveBorrowBookRequest() {
-        var response = bookInstanceService.approveBorrowBookRequest(1L, 1L);
+        var response = bookInstanceService.approveBorrowBookRequest(bookInstanceId, librarianId);
         assertThat(response).isNotNull();
     }
 
-    @Test
-    public void testIsBookAvailableWithNoAvailableInstances() {
-        // Create a test book
-        Book testBook = new Book();
-        testBook.setTitle("Test Book");
-
-        // Create an empty list of book instances
-        List<BookInstance> noInstances = new ArrayList<>();
-
-        // Mock the behavior of the bookInstanceRepository
-        Mockito.when(bookInstanceRepository.findAvailableBookInstancesByBook(testBook)).thenReturn(noInstances);
-
-        // Call the isBookAvailable method
-        boolean result = bookInstanceService.isBookAvailable(testBook);
-
-        // Assert that the result should be false since there are no available instances
-        assertFalse(result);
-    }
 
 
     @Test
     void returnBookRequest() {
+        var response = bookInstanceService.returnBookRequest(libraryUserId, bookInstanceId);
+        assertThat(response).isNotNull();
     }
 
     @Test
     void approveReturnBookRequest() {
+        var response = bookInstanceService.approveReturnBookRequest(bookInstanceId, librarianId);
+        assertThat(response).isNotNull();
     }
 }

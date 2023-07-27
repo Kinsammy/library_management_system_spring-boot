@@ -4,14 +4,9 @@ import com.sametech.library_management_system.data.dto.response.ApiResponse;
 import com.sametech.library_management_system.data.models.entity.Book;
 import com.sametech.library_management_system.data.models.entity.BookInstance;
 import com.sametech.library_management_system.data.models.entity.BookStatus;
-import com.sametech.library_management_system.data.repository.BookInstanceRepository;
-import com.sametech.library_management_system.data.repository.BookRepository;
-import com.sametech.library_management_system.data.repository.LibrarianRepository;
-import com.sametech.library_management_system.data.repository.LibraryUserRepository;
-import com.sametech.library_management_system.exception.BookNotAvailableException;
-import com.sametech.library_management_system.exception.BookNotFoundException;
-import com.sametech.library_management_system.exception.UnauthorizedBookReturnException;
-import com.sametech.library_management_system.exception.UserNotFoundException;
+import com.sametech.library_management_system.data.models.users.AppUser;
+import com.sametech.library_management_system.data.repository.*;
+import com.sametech.library_management_system.exception.*;
 import com.sametech.library_management_system.service.serviceInterface.IBookInstanceService;
 import com.sametech.library_management_system.service.serviceInterface.IBookService;
 import lombok.AllArgsConstructor;
@@ -30,6 +25,7 @@ public class BookInstanceService implements IBookInstanceService {
     private final BookRepository bookRepository;
     private final IBookService bookService;
     private final LibrarianRepository librarianRepository;
+    private final AppUserRepository appUserRepository;
 
 
     @Override
@@ -54,6 +50,15 @@ public class BookInstanceService implements IBookInstanceService {
             throw new BookNotFoundException("Book is not available for borrowing.");
         }
 
+        for (BookInstance instance : libraryUser.getBookInstances()) {
+            if (instance.getBook().equals(bookToBorrow) && instance.getBookStatus() == BookStatus.BORROW_REQUEST) {
+                throw new AlreadyBorrowedException("You have already requested for this Book.");
+            }
+            if (instance.getBook().equals(bookToBorrow) && instance.getBookStatus() == BookStatus.BORROWED) {
+                throw new AlreadyBorrowedException("You have already borrowed the BookInstance of this Book.");
+            }
+        }
+
 
         List<BookInstance> availableBookInstances = bookInstanceRepository.findAvailableBookInstancesByBook(bookToBorrow);
         System.out.printf("Found {%d} available instances for %s: {}", availableBookInstances.size(), bookToBorrow.getTitle());
@@ -74,10 +79,17 @@ public class BookInstanceService implements IBookInstanceService {
 
     public boolean isBookAvailable(Book book) {
         List<BookInstance> availableInstances = bookInstanceRepository.findByBookStatus(BookStatus.AVAILABLE);
-        boolean isAvailable = availableInstances.stream().anyMatch(instance -> instance.getBook().equals(book));
+        System.out.printf("Available instances count: %d%n", availableInstances.size());
+
+        boolean isAvailable = availableInstances.stream().anyMatch(instance -> {
+            System.out.printf("Comparing book titles: %s, %s%n", instance.getBook().getTitle(), book.getTitle());
+            return instance.getBook().equals(book);
+        });
+
         System.out.printf("%s is available for borrowing: %s%n", book.getTitle(), isAvailable);
         return isAvailable;
     }
+
 
 
     @Override
@@ -153,6 +165,7 @@ public class BookInstanceService implements IBookInstanceService {
                 .message(String.format("Book return request is approved by %s", librarianId))
                 .build();
     }
+
 
 
 }

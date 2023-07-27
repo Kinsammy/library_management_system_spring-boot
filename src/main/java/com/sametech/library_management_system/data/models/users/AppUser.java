@@ -17,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+
 public class AppUser implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,7 +32,7 @@ public class AppUser implements UserDetails{
     private String createdAt;
     @Column(name = "enabled")
     private boolean enabled;
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Token> tokens;
 
 
