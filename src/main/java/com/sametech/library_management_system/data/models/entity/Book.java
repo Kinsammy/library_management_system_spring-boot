@@ -25,8 +25,7 @@ public class Book {
     private String dateAdded;
     @Enumerated(EnumType.STRING)
     private Genre genre;
-    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    private Author author;
+    private String author;
     @OneToMany(mappedBy = "book")
     private List<BookInstance> instances;
 

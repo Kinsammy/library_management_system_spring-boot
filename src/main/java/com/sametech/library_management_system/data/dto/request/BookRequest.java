@@ -17,5 +17,5 @@ public class BookRequest {
     private String isbn;
     private String description;
     private Genre genre;
-    private Author author;
+    private String author;
 }

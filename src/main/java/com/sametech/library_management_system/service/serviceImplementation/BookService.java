@@ -109,7 +109,7 @@ public class BookService implements IBookService {
 
     @Override
     public List<Book> searchBooksByAuthor(String authorName) {
-        List<Book> books = bookRepository.findByAuthorNameContainingIgnoreCase(authorName);
+        List<Book> books = bookRepository.findBookByAuthorContainingIgnoreCase(authorName);
         if (books.isEmpty()){
             throw new BookNotFoundException("No books found with the given author.");
         }
