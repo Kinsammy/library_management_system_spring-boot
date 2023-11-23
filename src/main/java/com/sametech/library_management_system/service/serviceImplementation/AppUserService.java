@@ -159,8 +159,7 @@ public class AppUserService implements IAppUserService {
 
     @Override
     public ApiResponse resetPassword(PasswordRequest passwordRequest) {
-        Optional<Token> token = tokenRepository.findTokenByAppUserAndToken(getUserByEmail(
-                passwordRequest.getEmail()),
+        Optional<Token> token = tokenRepository.findTokenByAppUserAndToken(getUserByEmail(passwordRequest.getEmail()),
                 passwordRequest.getVerificationToken());
 
         if (token.isEmpty()) throw new LibraryLogicException("Invalid or expired reset token");

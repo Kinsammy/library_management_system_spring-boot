@@ -57,9 +57,6 @@ public class TokenService implements ITokenService {
     @Override
     public void deleteToken(Token token) {
         tokenRepository.delete(token);
-        ApiResponse.builder()
-                .message("Token has been deleted")
-                .build();
     }
 
 

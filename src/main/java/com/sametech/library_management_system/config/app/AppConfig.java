@@ -24,8 +24,7 @@ public class AppConfig {
     private String mailUrl;
     @Value("${sendinblue.api.key}")
     private String mailApiKey;
-//    @Value("${jwt.secret.key}")
-//    private String jwtSecretKey;
+
 
     private final AppUserRepository userRepository;
 
