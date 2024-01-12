@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/auth/library-user")
 @AllArgsConstructor
 @Tag(name = "Library User")
+@CrossOrigin(origins = "*")
 public class LibraryUserController {
     private final ILibraryUserService libraryUserService;
 

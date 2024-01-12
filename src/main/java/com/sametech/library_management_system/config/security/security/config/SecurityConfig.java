@@ -88,11 +88,15 @@ public class SecurityConfig {
 
     private CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration corsConfiguration= new CorsConfiguration();
-        corsConfiguration.setAllowedMethods(List.of("*"));
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000")); // Adjust to your frontend URL
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE"));
+        corsConfiguration.setAllowedOrigins(List.of("*"));
         corsConfiguration.setAllowedMethods(List.of("*"));
+        corsConfiguration.setAllowedHeaders(List.of("*"));
+
         source.registerCorsConfiguration("/**", corsConfiguration);
         return source;
     }
+
 }

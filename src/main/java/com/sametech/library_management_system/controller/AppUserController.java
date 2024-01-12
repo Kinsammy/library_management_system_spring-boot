@@ -22,7 +22,7 @@ import java.io.IOException;
 @RequestMapping("/api/v1/auth")
 @AllArgsConstructor
 @Tag(name = "Application User")
-
+@CrossOrigin(origins = "*")
 public class AppUserController {
     private final IAppUserService appUserService;
 
