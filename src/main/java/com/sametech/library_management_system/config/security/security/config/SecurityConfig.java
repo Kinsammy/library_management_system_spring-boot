@@ -94,7 +94,6 @@ public class SecurityConfig {
         corsConfiguration.setAllowedOrigins(List.of("*"));
         corsConfiguration.setAllowedMethods(List.of("*"));
         corsConfiguration.setAllowedHeaders(List.of("*"));
-
         source.registerCorsConfiguration("/**", corsConfiguration);
         return source;
     }
