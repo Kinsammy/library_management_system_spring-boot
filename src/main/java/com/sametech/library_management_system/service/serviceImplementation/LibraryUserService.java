@@ -16,6 +16,7 @@ import com.sametech.library_management_system.data.repository.LibraryUserReposit
 import com.sametech.library_management_system.exception.LibraryLogicException;
 import com.sametech.library_management_system.exception.UserAlreadyExistException;
 import com.sametech.library_management_system.notification.mail.IMailService;
+import com.sametech.library_management_system.notification.publisher.AppUserEventPublisher;
 import com.sametech.library_management_system.service.serviceInterface.IAppUserService;
 import com.sametech.library_management_system.service.serviceInterface.ILibraryUserService;
 import com.sametech.library_management_system.service.serviceInterface.ITokenService;
@@ -45,6 +46,7 @@ public class LibraryUserService implements ILibraryUserService {
     private final IMailService mailService;
     private final IAppUserService userService;
     private final ITokenService tokenService;
+    private final AppUserEventPublisher userEventPublisher;
     
     @Override
     public RegisterResponse register(RegisterRequest request) {
@@ -58,7 +60,9 @@ public class LibraryUserService implements ILibraryUserService {
         getUserDetails(request, libraryUserDetails, libraryUser);
         var appUser = appUserRepository.save(libraryUserDetails);
         String token = tokenService.generateAndSaveToken(appUser);
-        sendVerificationEmail(appUser, token);
+//        sendVerificationEmail(appUser, token);
+        userEventPublisher.publishVerificationEvent(appUser);
+
         return userService.getRegisterResponse(appUser);
     }
 

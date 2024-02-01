@@ -3,15 +3,19 @@ package com.sametech.library_management_system.notification.listener;
 import com.sametech.library_management_system.data.dto.request.EmailNotificationRequest;
 import com.sametech.library_management_system.data.dto.request.Recipient;
 import com.sametech.library_management_system.data.models.users.AppUser;
+import com.sametech.library_management_system.exception.LibraryLogicException;
 import com.sametech.library_management_system.notification.event.RegistrationCompleteEvent;
 import com.sametech.library_management_system.notification.mail.IMailService;
 import com.sametech.library_management_system.notification.mail.MailService;
 import com.sametech.library_management_system.service.serviceImplementation.AppUserService;
 import com.sametech.library_management_system.service.serviceImplementation.TokenService;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
 
 @Slf4j
 @Component
@@ -23,27 +27,31 @@ public class RegistrationCompleteListener implements ApplicationListener<Registr
     private final TokenService tokenService;
 
 
-    private AppUser user;
-
 
     @Override
-    public void onApplicationEvent(RegistrationCompleteEvent event) {
-        user =  event.getUser();
-
-        String verificationToken = tokenService.generateAndSaveToken(user);
-
-        String url = event.getApplicationUrl()+"/api/v1/auth/verify?token="+verificationToken;
-
-        sendVerificationEmail(url);
+    public void onApplicationEvent(@NotNull  RegistrationCompleteEvent event) {
+      try {
+          this.sendVerificationEmail(event);
+      } catch (IOException exception) {
+          throw new LibraryLogicException(exception.getMessage());
+      }
     }
 
-    private void sendVerificationEmail(String url) {
+    private void sendVerificationEmail(final RegistrationCompleteEvent event) throws IOException {
+        log.info("Sending verification token...");
+        AppUser user = event.getUser();
+        String token = tokenService.generateAndSaveToken(event.getUser());
+//        log.info(token);
+
+        String verificationUrl = "http://localhost:5252/api/v1/auth/verify?token=" + token;
+
+
         EmailNotificationRequest request = new EmailNotificationRequest();
         request.setSubject("Email verification");
-        request.setHtmlContent("<h4>, " + user.getFirstName() + ", </h4>" +
-                "<h6>Welcome To SamLibrary, Thanks for joining the team. </h6>" +
+        request.setHtmlContent("<h2>Hi " + user.getFirstName() + ", </h2>" +
+                "<p>Welcome To SamTech Library, Thanks for joining the team. </p>" +
                 "<p>Please, follow the link below to complete your registration.</p>" +
-                "<p><a href=\"" + url + "\">Verify your email and activate your account</a></p>" +
+                "<p><a href=\"" + verificationUrl + "\">Verify your email and activate your account</a></p>" +
 
                 "<p>Thank you<br>users Registration Portal Service</p>");
 

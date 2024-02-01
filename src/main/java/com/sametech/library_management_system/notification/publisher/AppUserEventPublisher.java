@@ -13,8 +13,9 @@ import org.springframework.stereotype.Component;
 public class AppUserEventPublisher {
     private final ApplicationEventPublisher eventPublisher;
 
-    public void publish(final AppUser user) {
+    public void publishVerificationEvent(final AppUser user) {
         log.info("Publishing Custom event...");
         final RegistrationCompleteEvent verifyEmail = new RegistrationCompleteEvent(this, user);
+        eventPublisher.publishEvent(verifyEmail);
     }
 }
