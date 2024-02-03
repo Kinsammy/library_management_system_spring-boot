@@ -26,7 +26,7 @@ import java.io.IOException;
 public class AppUserController {
     private final IAppUserService appUserService;
 
-    @PostMapping("/verify")
+    @GetMapping("/verify")
     public ResponseEntity<VerifyResponse>  verifyAccountWithToken(VerifyRequest request){
         return ResponseEntity.ok(appUserService.verifyAccountWithToken(request));
     }
