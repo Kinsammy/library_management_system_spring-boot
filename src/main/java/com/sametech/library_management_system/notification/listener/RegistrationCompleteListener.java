@@ -25,27 +25,25 @@ public class RegistrationCompleteListener implements ApplicationListener<Registr
 
     private final IMailService mailService;
     private final TokenService tokenService;
+    private AppUser user;
 
 
 
     @Override
     public void onApplicationEvent(@NotNull  RegistrationCompleteEvent event) {
-      try {
-          this.sendVerificationEmail(event);
+        log.info("Sending verification token...");
+        user = event.getUser();
+        String token = tokenService.generateAndSaveToken(event.getUser());
+        String verificationUrl = "http://localhost:5252/api/v1/auth/verify?token="+token;
+
+        try {
+          this.sendVerificationEmail(verificationUrl);
       } catch (IOException exception) {
           throw new LibraryLogicException(exception.getMessage());
       }
     }
 
-    private void sendVerificationEmail(final RegistrationCompleteEvent event) throws IOException {
-        log.info("Sending verification token...");
-        AppUser user = event.getUser();
-        String token = tokenService.generateAndSaveToken(event.getUser());
-//        log.info(token);
-
-        String verificationUrl = "http://localhost:5252/api/v1/auth/verify?token=" + token;
-
-
+    private void sendVerificationEmail(String verificationUrl) throws IOException {
         EmailNotificationRequest request = new EmailNotificationRequest();
         request.setSubject("Email verification");
         request.setHtmlContent("<h2>Hi " + user.getFirstName() + ", </h2>" +

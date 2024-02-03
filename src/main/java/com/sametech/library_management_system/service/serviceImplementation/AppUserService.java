@@ -124,7 +124,7 @@ public class AppUserService implements IAppUserService {
 
     private static VerifyResponse getVerifyResponse() {
         return VerifyResponse.builder()
-                .message("Account verification successful")
+                .message("Email verified successfully. Now you can login to your account")
                 .isSuccess(true)
                 .build();
     }
