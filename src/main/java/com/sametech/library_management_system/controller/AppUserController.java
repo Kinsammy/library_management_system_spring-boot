@@ -27,7 +27,9 @@ public class AppUserController {
     private final IAppUserService appUserService;
 
     @GetMapping("/verify")
-    public ResponseEntity<VerifyResponse>  verifyAccountWithToken(VerifyRequest request){
+    public ResponseEntity<VerifyResponse>  verifyAccountWithToken(@RequestParam("email") String email,
+                                                                  @RequestParam("token") String verificationToken){
+        VerifyRequest request  = new VerifyRequest(email, verificationToken);
         return ResponseEntity.ok(appUserService.verifyAccountWithToken(request));
     }
 

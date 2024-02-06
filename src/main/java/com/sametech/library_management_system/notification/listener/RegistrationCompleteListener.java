@@ -35,8 +35,9 @@ public class RegistrationCompleteListener implements ApplicationListener<Registr
         log.info("Sending verification token...");
         user = event.getUser();
         String userEmail = userService.getUserByEmail(user.getEmail()).getEmail();
-        String token = tokenService.generateAndSaveToken(event.getUser());
-        String verificationUrl = "http://localhost:5252/api/v1/auth/verify?email=" + userEmail + ",token=" + token;
+        String verificationToken = tokenService.generateAndSaveToken(event.getUser());
+        String verificationUrl = "http://localhost:5252/api/v1/auth/verify?email=" + userEmail + "&token=" + verificationToken;
+
 
 
         try {
