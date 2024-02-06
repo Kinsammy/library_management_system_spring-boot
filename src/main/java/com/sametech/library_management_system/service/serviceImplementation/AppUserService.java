@@ -22,6 +22,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,6 +38,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class AppUserService implements IAppUserService {
     private final AppUserRepository appUserRepository;
     private final ITokenService tokenService;
@@ -66,8 +68,13 @@ public class AppUserService implements IAppUserService {
 
     @Override
     public VerifyResponse verifyAccountWithToken(VerifyRequest request) {
-//        if (getUserByEmail(request.getEmail()) == null) throw new UserNotFoundException("Invalid email");
-        AppUser appUser = getUserByEmail(request.getEmail());
+        String userEmail = request.getEmail();
+
+        if (userEmail == null)
+            throw new UserNotFoundException("Email cannot be null");
+        log.info("User email: {}", userEmail);
+
+        AppUser appUser = getUserByEmail(userEmail);
         Optional<Token> receivedToken = tokenService.validateReceivedToken(appUser, request.getVerificationToken());
 
         appUser.setEnabled(true);
@@ -199,6 +206,7 @@ public class AppUserService implements IAppUserService {
 
     @Override
     public AppUser getUserByEmail(String email) {
+        log.info("Searching for user with email: {}", email);
         return appUserRepository.findByEmail(email).orElseThrow(
                 ()-> new UserNotFoundException(String.format("User not found for email: %s", email)));
     }
