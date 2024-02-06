@@ -72,7 +72,6 @@ public class AppUserService implements IAppUserService {
 
         if (userEmail == null)
             throw new UserNotFoundException("Email cannot be null");
-        log.info("User email: {}", userEmail);
 
         AppUser appUser = getUserByEmail(userEmail);
         Optional<Token> receivedToken = tokenService.validateReceivedToken(appUser, request.getVerificationToken());
@@ -206,7 +205,6 @@ public class AppUserService implements IAppUserService {
 
     @Override
     public AppUser getUserByEmail(String email) {
-        log.info("Searching for user with email: {}", email);
         return appUserRepository.findByEmail(email).orElseThrow(
                 ()-> new UserNotFoundException(String.format("User not found for email: %s", email)));
     }
