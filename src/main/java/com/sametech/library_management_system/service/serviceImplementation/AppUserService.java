@@ -66,12 +66,15 @@ public class AppUserService implements IAppUserService {
 
     @Override
     public VerifyResponse verifyAccountWithToken(VerifyRequest request) {
-        if (getUserByEmail(request.getEmail()) == null) throw new UserNotFoundException("Invalid email");
+//        if (getUserByEmail(request.getEmail()) == null) throw new UserNotFoundException("Invalid email");
         AppUser appUser = getUserByEmail(request.getEmail());
         Optional<Token> receivedToken = tokenService.validateReceivedToken(appUser, request.getVerificationToken());
+
         appUser.setEnabled(true);
         appUserRepository.save(appUser);
+
         tokenService.deleteToken(receivedToken.get());
+
         return getVerifyResponse();
     }
 
@@ -197,7 +200,7 @@ public class AppUserService implements IAppUserService {
     @Override
     public AppUser getUserByEmail(String email) {
         return appUserRepository.findByEmail(email).orElseThrow(
-                ()-> new LibraryLogicException(String.format("Email: %s not found", email)));
+                ()-> new UserNotFoundException(String.format("User not found for email: %s", email)));
     }
 
     @Override
