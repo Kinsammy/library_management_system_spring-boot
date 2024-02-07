@@ -94,6 +94,7 @@ public class AppUserService implements IAppUserService {
         );
         var appUser = appUserRepository.findByEmail(request.getEmail())
                 .orElseThrow(()-> new UserNotFoundException("User not found"));
+
         var jwtToken = jwtService.generateToken(appUser);
         revokeAllUserTokens(appUser);
         saveUserToken(appUser, jwtToken);
